@@ -200,7 +200,7 @@ bool GetDeviceLockStatus() {
      if (android::base::GetProperty("ro.boot.vbmeta.device_state", "") != "locked") {
          return false;
      }
-     return cmdline.find("androidboot.verifiedbootstate=orange") == std::string::npos;
+     return cmdline.find("androidboot.verifiedbootstate=green") != std::string::npos;
 }
 
 bool UpdateAllPartitionMetadata(FastbootDevice* device, const std::string& super_name,
