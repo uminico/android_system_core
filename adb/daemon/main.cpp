@@ -124,7 +124,7 @@ static bool should_drop_privileges() {
 #endif
 
     // ... except "adb root" lets you keep privileges in a debuggable build.
-    std::string prop = android::base::GetProperty("lineage.service.adb.root", "");
+    std::string prop = android::base::GetProperty("service.adb.root", "");
     bool adb_root = (prop == "1");
     bool adb_unroot = (prop == "0");
 #if defined(__ANDROID_RECOVERY__)
@@ -244,6 +244,10 @@ int adbd_main(int server_port) {
 #if defined(ALLOW_ADBD_NO_AUTH)
     // If ro.adb.secure is unset, default to no authentication required.
     auth_required = android::base::GetBoolProperty("ro.adb.secure", false);
+#if defined(__ANDROID_RECOVERY__)
+    auth_required = auth_required &&
+                    android::base::GetBoolProperty("ro.adb.secure.recovery", true);
+#endif
 #elif defined(__ANDROID__)
     if (is_device_unlocked()) {  // allows no authentication when the device is unlocked.
         auth_required = android::base::GetBoolProperty("ro.adb.secure", false);
